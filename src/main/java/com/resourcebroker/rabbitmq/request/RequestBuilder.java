@@ -1,6 +1,7 @@
 package com.resourcebroker.rabbitmq.request;
 
 import com.resourcebroker.common.config.RabbitMQConfig;
+import com.resourcebroker.common.entitiy.ServiceUserEntity;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -21,10 +22,24 @@ public class RequestBuilder {
     @Autowired
     private RabbitMQConfig rabbitMQConfig;
 
-    public HttpRequestBase getVhostCreateRequest(String hostName) throws UnsupportedEncodingException {
+    public HttpRequestBase getVhostCreateRequest(String hostName) {
         String url = rabbitMQConfig.getRabbitMQUrl() + APIUrlBuilder.getVhostsCreateURL(hostName);
         HttpPut httpPut = (HttpPut) createRequest(RequestType.PUT, url);
-        httpPut.setEntity( new StringEntity( "{\"name\":\""+ hostName +"\"}" ) );
+        StringEntity entity = HttpEntityBuilder.createBulder().addKeyValuePare("name", hostName).createEntity();
+        httpPut.setEntity(entity);
+        return httpPut;
+    }
+
+    public HttpRequestBase getServiceUserCreateRequest(ServiceUserEntity serviceUser) throws UnsupportedEncodingException {
+        String url = rabbitMQConfig.getRabbitMQUrl() + APIUrlBuilder.getUsersCreateURL(serviceUser.getUserName());
+        HttpPut httpPut = (HttpPut) createRequest(RequestType.PUT, url);
+        StringEntity entity = HttpEntityBuilder.createBulder()
+                .addKeyValuePare("username", serviceUser.getUserName())
+                .addKeyValuePare("has-password", "true")
+                .addKeyValuePare("password", serviceUser.getUserPassword())
+                .addKeyValuePare("tags", "management")
+                .createEntity();
+        httpPut.setEntity(entity);
         return httpPut;
     }
 

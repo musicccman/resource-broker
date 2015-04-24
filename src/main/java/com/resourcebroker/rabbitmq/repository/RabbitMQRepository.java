@@ -2,6 +2,7 @@ package com.resourcebroker.rabbitmq.repository;
 
 import com.resourcebroker.common.config.RabbitMQConfig;
 import com.resourcebroker.common.entitiy.ServiceUserEntity;
+import com.resourcebroker.common.exception.ApplicationException;
 import com.resourcebroker.common.repository.ServiceInstanceRepository;
 import com.resourcebroker.rabbitmq.request.RequestBuilder;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -37,17 +38,25 @@ public class RabbitMQRepository implements ServiceInstanceRepository {
     }
 
     @Override
-    public String createService(String serviceName) throws UnsupportedEncodingException {
-
+    public String createService(String serviceName) throws ApplicationException{
         HttpRequestBase requestBase = requestBuilder.getVhostCreateRequest(serviceName);
-        try (CloseableHttpResponse response = httpClient.execute(requestBase)) {
-            logger.info("vhost created: " + serviceName);
-            return serviceName;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        executeRequest(serviceName, requestBase);
+        return serviceName;
+    }
 
-        return null;
+    private void executeRequest(String serviceName, HttpRequestBase requestBase) throws ApplicationException{
+        try (CloseableHttpResponse response = httpClient.execute(requestBase)) {
+            handleResponce(response);
+        } catch (IOException e) {
+            ApplicationException.fail(e);
+        }
+    }
+
+    private void handleResponce(CloseableHttpResponse response) throws ApplicationException{
+        int responceCode = response.getStatusLine().getStatusCode();
+        if (!((responceCode>199)&&(responceCode<299))){ //not 2.. (sucess responce)
+            ApplicationException.fail(response.getStatusLine().toString());
+        }
     }
 
     @Override

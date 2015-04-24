@@ -49,18 +49,20 @@ public class RabbitMQRepository implements ServiceInstanceRepository {
 
     @Override
     public void addUserToServiceInstance(ServiceUserEntity serviceUser, String serviceName) {
-        HttpRequestBase requestBase = requestBuilder.getUserToVostBindingRequest(serviceUser, serviceName);
+        HttpRequestBase requestBase = requestBuilder.getUserToVhostBindingRequest(serviceUser, serviceName);
         executeRequest(requestBase);
     }
 
     @Override
     public void deleteService(String serviceName) {
-
+        HttpRequestBase requestBase = requestBuilder.getVhostDeleteRequest(serviceName);
+        executeRequest(requestBase);
     }
 
     @Override
     public void deleteServiceUser(ServiceUserEntity serviceUser) {
-
+        HttpRequestBase requestBase = requestBuilder.getServiceUserDeleteRequest(serviceUser);
+        executeRequest(requestBase);
     }
 
     private void executeRequest(HttpRequestBase requestBase) throws ApplicationException{

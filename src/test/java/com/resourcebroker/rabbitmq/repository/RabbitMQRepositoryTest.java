@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:rabbitmq-broker-test-context.xml")
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@FixMethodOrder(MethodSorters.DEFAULT)
 public class RabbitMQRepositoryTest {
 
     @Autowired
@@ -24,26 +24,32 @@ public class RabbitMQRepositoryTest {
     public ServiceUserEntity serviceUserEntity = new ServiceUserEntity("junitUser", "111");
 
     @Test
+    public void testRepository() throws Exception {
+        testCreateService();
+        testCreateServiceUser();
+        testAddUserToServiceInstance();
+        testDeleteService();
+        testDeleteServiceUser();
+    }
+
     public void testCreateService() throws Exception {
         serviceInstanceRepository.createService(serviceName);
     }
 
-    @Test
     public void testCreateServiceUser() throws Exception {
         serviceInstanceRepository.createServiceUser(serviceUserEntity);
     }
 
-    @Test
     public void testAddUserToServiceInstance() throws Exception {
         serviceInstanceRepository.addUserToServiceInstance(serviceUserEntity, serviceName);
     }
 
     public void testDeleteService() throws Exception {
-
+        serviceInstanceRepository.deleteService(serviceName);
     }
 
     public void testDeleteServiceUser() throws Exception {
-
+        serviceInstanceRepository.deleteServiceUser(serviceUserEntity);
     }
 
 }

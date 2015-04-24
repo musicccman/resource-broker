@@ -41,7 +41,7 @@ public class RequestBuilder {
         return httpPut;
     }
 
-    public HttpRequestBase getUserToVostBindingRequest(ServiceUserEntity serviceUser, String serviceName) {
+    public HttpRequestBase getUserToVhostBindingRequest(ServiceUserEntity serviceUser, String serviceName) {
         String url = rabbitMQConfig.getRabbitMQUrl() + APIUrlBuilder.getUserToVhostAddBindingURL(serviceUser.getUserName(), serviceName);
         HttpPut httpPut = (HttpPut) createRequest(RequestType.PUT, url);
         StringEntity entity = HttpEntityBuilder.createBulder()
@@ -53,6 +53,18 @@ public class RequestBuilder {
                 .createEntity();
         httpPut.setEntity(entity);
         return httpPut;
+    }
+
+    public HttpRequestBase getVhostDeleteRequest(String hostName) {
+        String url = rabbitMQConfig.getRabbitMQUrl() + APIUrlBuilder.getVhostsDeleteURL(hostName);
+        HttpDelete httpDelete = (HttpDelete) createRequest(RequestType.DELETE, url);
+        return httpDelete;
+    }
+
+    public HttpRequestBase getServiceUserDeleteRequest(ServiceUserEntity serviceUserEntity){
+        String url = rabbitMQConfig.getRabbitMQUrl() + APIUrlBuilder.getUsersDeleteURL(serviceUserEntity.getUserName());
+        HttpDelete httpDelete = (HttpDelete) createRequest(RequestType.DELETE, url);
+        return httpDelete;
     }
 
     private HttpRequestBase createRequest(RequestType requestType, String url){

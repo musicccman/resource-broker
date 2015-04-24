@@ -75,7 +75,7 @@ public class RabbitMQRepository implements ServiceInstanceRepository {
 
     private void handleResponce(CloseableHttpResponse response) throws ApplicationException{
         int responceCode = response.getStatusLine().getStatusCode();
-        if (!((responceCode>199)&&(responceCode<299))){ //not 2.. (sucess responce)
+        if (!((responceCode>199)&&(responceCode<299))){ //not HTTP Response code 2.. (200, 201 .. 207 and 226)
             ApplicationException.fail(response.getStatusLine().toString());
         }
     }

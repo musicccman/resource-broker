@@ -5,6 +5,14 @@ package com.resourcebroker.common.entitiy;
  */
 public class ServiceUserEntity {
 
+    public ServiceUserEntity() {
+    }
+
+    public ServiceUserEntity(String userName, String userPassword) {
+        this.userName = userName;
+        this.userPassword = userPassword;
+    }
+
     private String userName;
     private String userPassword;
 

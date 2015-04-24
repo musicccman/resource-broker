@@ -11,8 +11,6 @@ import org.apache.http.entity.StringEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.UnsupportedEncodingException;
-
 /**
  * @author: Andrey Kozlov
  */
@@ -30,7 +28,7 @@ public class RequestBuilder {
         return httpPut;
     }
 
-    public HttpRequestBase getServiceUserCreateRequest(ServiceUserEntity serviceUser) throws UnsupportedEncodingException {
+    public HttpRequestBase getServiceUserCreateRequest(ServiceUserEntity serviceUser) {
         String url = rabbitMQConfig.getRabbitMQUrl() + APIUrlBuilder.getUsersCreateURL(serviceUser.getUserName());
         HttpPut httpPut = (HttpPut) createRequest(RequestType.PUT, url);
         StringEntity entity = HttpEntityBuilder.createBulder()
@@ -38,6 +36,20 @@ public class RequestBuilder {
                 .addKeyValuePare("has-password", "true")
                 .addKeyValuePare("password", serviceUser.getUserPassword())
                 .addKeyValuePare("tags", "management")
+                .createEntity();
+        httpPut.setEntity(entity);
+        return httpPut;
+    }
+
+    public HttpRequestBase getUserToVostBindingRequest(ServiceUserEntity serviceUser, String serviceName) {
+        String url = rabbitMQConfig.getRabbitMQUrl() + APIUrlBuilder.getUserToVhostAddBindingURL(serviceUser.getUserName(), serviceName);
+        HttpPut httpPut = (HttpPut) createRequest(RequestType.PUT, url);
+        StringEntity entity = HttpEntityBuilder.createBulder()
+                .addKeyValuePare("username", serviceUser.getUserName())
+                .addKeyValuePare("vhost", serviceName)
+                .addKeyValuePare("configure", ".*")
+                .addKeyValuePare("write", ".*")
+                .addKeyValuePare("read", ".*")
                 .createEntity();
         httpPut.setEntity(entity);
         return httpPut;

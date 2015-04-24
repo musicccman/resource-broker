@@ -1,6 +1,7 @@
 package com.resourcebroker.common.repository;
 
 import com.resourcebroker.common.entitiy.ServiceUserEntity;
+import com.resourcebroker.common.exception.ApplicationException;
 
 import java.io.UnsupportedEncodingException;
 
@@ -9,11 +10,11 @@ import java.io.UnsupportedEncodingException;
  */
 public interface ServiceInstanceRepository {
 
-    String createService(String serviceName) throws UnsupportedEncodingException;
+    String createService(String serviceName);
 
-    ServiceUserEntity createServiceUser(ServiceUserEntity serviceUser);
+    ServiceUserEntity createServiceUser(ServiceUserEntity serviceUser) ;
 
-    void addUserToServiceInstance(ServiceUserEntity serviceUser, String serviceName);
+    void addUserToServiceInstance(ServiceUserEntity serviceUser, String serviceName) ;
 
     void deleteService(String serviceName);
 

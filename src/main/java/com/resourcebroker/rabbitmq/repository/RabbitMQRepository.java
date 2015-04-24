@@ -34,7 +34,7 @@ public class RabbitMQRepository implements ServiceInstanceRepository {
     }
 
     @Override
-    public String createService(String serviceName) throws ApplicationException{
+    public String createService(String serviceName) {
         HttpRequestBase requestBase = requestBuilder.getVhostCreateRequest(serviceName);
         executeRequest(requestBase);
         return serviceName;
@@ -42,13 +42,15 @@ public class RabbitMQRepository implements ServiceInstanceRepository {
 
     @Override
     public ServiceUserEntity createServiceUser(ServiceUserEntity serviceUser) {
-
-        return null;
+        HttpRequestBase requestBase = requestBuilder.getServiceUserCreateRequest(serviceUser);
+        executeRequest(requestBase);
+        return serviceUser;
     }
 
     @Override
     public void addUserToServiceInstance(ServiceUserEntity serviceUser, String serviceName) {
-
+        HttpRequestBase requestBase = requestBuilder.getUserToVostBindingRequest(serviceUser, serviceName);
+        executeRequest(requestBase);
     }
 
     @Override
